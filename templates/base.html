@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Barber Charque{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+  {% if session.user_id %}
+  <nav class="navbar">
+    <a class="navbar-brand" href="/">✂ Barber Charque</a>
+    <div class="navbar-links">
+      {% if session.tipo == 'admin' %}
+        <a href="{{ url_for('admin_dashboard') }}">Agendamentos</a>
+        <a href="{{ url_for('admin_horarios') }}">Horários</a>
+      {% else %}
+        <a href="{{ url_for('dashboard') }}">Meus Agendamentos</a>
+        <a href="{{ url_for('agendar') }}">Agendar</a>
+      {% endif %}
+      <a href="{{ url_for('logout') }}" class="btn-logout">Sair</a>
+    </div>
+  </nav>
+  {% endif %}
+
+  <main class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="footer">
+    <p>© 2024 Barber Charque — Todos os direitos reservados</p>
+  </footer>
+
+</body>
+</html>

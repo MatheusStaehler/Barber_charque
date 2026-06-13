@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block title %}Meus Agendamentos – Barber Charque{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h2>Olá, {{ session.nome }}!</h2>
+  <a href="{{ url_for('agendar') }}" class="btn btn-primary">+ Novo agendamento</a>
+</div>
+
+{% if agendamentos %}
+<table class="table">
+  <thead>
+    <tr>
+      <th>Data</th>
+      <th>Horário</th>
+      <th>Ação</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for ag in agendamentos %}
+    <tr>
+      <td>{{ ag.data.strftime('%d/%m/%Y') }}</td>
+      <td>{{ ag.horario }}</td>
+      <td>
+        <form method="POST" action="{{ url_for('cancelar', ag_id=ag.id) }}"
+              onsubmit="return confirm('Cancelar este agendamento?')">
+          <button type="submit" class="btn btn-danger btn-sm">Cancelar</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<div class="empty-state">
+  <p>Você não tem agendamentos.<br>
+    <a href="{{ url_for('agendar') }}">Agendar agora →</a>
+  </p>
+</div>
+{% endif %}
+{% endblock %}

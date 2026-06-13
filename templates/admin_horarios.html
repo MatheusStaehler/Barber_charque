@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block title %}Gerenciar Horários – Barber Charque{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h2>Horários Disponíveis</h2>
+  <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline">← Agendamentos</a>
+</div>
+
+<!-- Formulário de cadastro -->
+<div class="form-card form-card--inline">
+  <h3 class="form-title">Cadastrar novo horário</h3>
+  <form method="POST" action="{{ url_for('admin_horarios') }}" class="form-inline">
+    <div class="form-group">
+      <label for="data">Data</label>
+      <input type="date" id="data" name="data" required min="{{ '' }}">
+    </div>
+    <div class="form-group">
+      <label for="horario">Horário</label>
+      <input type="time" id="horario" name="horario" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Cadastrar</button>
+  </form>
+</div>
+
+<!-- Lista de horários disponíveis -->
+{% if slots %}
+<table class="table">
+  <thead>
+    <tr>
+      <th>Data</th>
+      <th>Horário</th>
+      <th>Ação</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for slot in slots %}
+    <tr>
+      <td>{{ slot.data.strftime('%d/%m/%Y') }}</td>
+      <td>{{ slot.horario }}</td>
+      <td>
+        <form method="POST" action="{{ url_for('admin_excluir_horario', slot_id=slot.id) }}"
+              onsubmit="return confirm('Remover este horário?')">
+          <button type="submit" class="btn btn-danger btn-sm">Remover</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<div class="empty-state">
+  <p>Nenhum horário cadastrado para datas futuras.</p>
+</div>
+{% endif %}
+{% endblock %}

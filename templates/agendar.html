@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block title %}Agendar Horário – Barber Charque{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h2>Escolha um horário</h2>
+</div>
+<div class="info-box">
+  <h4>Informações sobre o atendimento</h4>
+  <p>
+    A Barber Charque é uma barbearia popular que oferece atendimento simplificado
+    e acessível. Todos os serviços possuem valor único de <strong>R$ 15,00</strong>
+    e são realizados pelo barbeiro <strong>Matheus Staehler</strong> :).
+  </p>
+  <p>
+    Por esse motivo, o sistema disponibiliza apenas a escolha de data e horário,
+    não sendo necessária a seleção de barbeiro ou serviço específico.
+  </p>
+</div>
+{% if slots %}
+<form method="POST" action="{{ url_for('agendar') }}">
+  <div class="slots-grid">
+    {% for slot in slots %}
+    <label class="slot-card">
+      <input type="radio" name="disponibilidade_id" value="{{ slot.id }}" required>
+      <span class="slot-date">{{ slot.data.strftime('%d/%m/%Y') }}</span>
+      <span class="slot-time">{{ slot.horario }}</span>
+    </label>
+    {% endfor %}
+  </div>
+  <div class="form-actions">
+    <button type="submit" class="btn btn-primary">Confirmar agendamento</button>
+    <a href="{{ url_for('dashboard') }}" class="btn btn-outline">Voltar</a>
+  </div>
+</form>
+{% else %}
+<div class="empty-state">
+  <p>Nenhum horário disponível no momento.<br>
+    Volte mais tarde ou entre em contato com a barbearia.
+  </p>
+  <a href="{{ url_for('dashboard') }}" class="btn btn-outline">Voltar</a>
+</div>
+{% endif %}
+{% endblock %}

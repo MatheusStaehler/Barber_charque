@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block title %}Painel Admin – Barber Charque{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h2>Painel Administrativo</h2>
+  <a href="{{ url_for('admin_horarios') }}" class="btn btn-primary">Gerenciar Horários</a>
+</div>
+
+<h3 class="section-title">Agendamentos</h3>
+
+{% if agendamentos %}
+<table class="table">
+  <thead>
+    <tr>
+      <th>Data</th>
+      <th>Horário</th>
+      <th>Cliente</th>
+      <th>Telefone</th>
+      <th>Ação</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for ag in agendamentos %}
+    <tr>
+      <td>{{ ag.data.strftime('%d/%m/%Y') }}</td>
+      <td>{{ ag.horario }}</td>
+      <td>{{ ag.nome }}</td>
+      <td>{{ ag.telefone }}</td>
+      <td>
+        <form method="POST" action="{{ url_for('admin_cancelar', ag_id=ag.id) }}"
+              onsubmit="return confirm('Cancelar agendamento de {{ ag.nome }}?')">
+          <button type="submit" class="btn btn-danger btn-sm">Cancelar</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<div class="empty-state">
+  <p>Nenhum agendamento registrado.</p>
+</div>
+{% endif %}
+{% endblock %}

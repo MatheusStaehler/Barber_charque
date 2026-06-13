@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}Barber Charque – Bem-vindo{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <div class="hero-content">
+    <span class="hero-eyebrow">Campo Bom • RS</span>
+    <h1 class="hero-title">✂ Barber Charque</h1>
+    <p class="hero-subtitle">Corte, estilo e tradição gaúcha.<br>Agende seu horário com facilidade.</p>
+    <div class="hero-actions">
+      <a href="{{ url_for('cadastro') }}" class="btn btn-primary">Criar conta</a>
+      <a href="{{ url_for('login') }}" class="btn btn-outline">Já tenho conta</a>
+    </div>
+  </div>
+</section>
+{% endblock %}
