@@ -1,89 +1,115 @@
-# ✂ Barber Charque
+# ✂ Barber Charque# Barber Charque
 
-Sistema de agendamento online para barbearia, desenvolvido com Flask + MySQL.
+## Descrição do Sistema
 
-## Tecnologias
+O Barber Charque é um sistema web desenvolvido para auxiliar no gerenciamento de agendamentos de uma barbearia. A aplicação permite que clientes realizem cadastro, efetuem login e agendem horários disponíveis. Além disso, o sistema possui uma área administrativa para gerenciamento dos horários e acompanhamento dos agendamentos realizados.
 
-- Python 3 + Flask
-- MySQL
-- HTML5, CSS3, JavaScript
+## Tecnologias Utilizadas
 
-## Como executar localmente
+* Python 3
+* Flask
+* MySQL
+* HTML5
+* CSS3
 
-### 1. Clone o repositório
+## Instalação e Execução
 
-```bash
-git clone https://github.com/seu-usuario/barber-charque.git
-cd barber-charque
+### 1. Banco de Dados
+
+Criar o banco de dados:
+
+```sql
+CREATE DATABASE barber_charque;
 ```
 
-### 2. Crie o ambiente virtual e instale as dependências
+Selecionar o banco:
+
+```sql
+USE barber_charque;
+```
+
+Executar o script disponível no arquivo `schema.sql` para criação das tabelas do sistema.
+
+### 2. Configuração
+
+Renomear o arquivo `.env.example` para `.env` e configurar os dados de conexão com o banco de dados.
+
+Exemplo:
+
+```text
+SECRET_KEY=sua_chave_secreta
+
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=sua_senha
+DB_NAME=barber_charque
+```
+
+### 3. Instalação das Dependências
+
+Executar o comando:
 
 ```bash
-python -m venv venv
-venv\Scripts\activate        # Windows
-# source venv/bin/activate   # Linux/Mac
-
 pip install -r requirements.txt
 ```
 
-### 3. Configure as variáveis de ambiente
+### 4. Inicialização do Sistema
 
-```bash
-# Copie o arquivo de exemplo
-copy .env.example .env      # Windows
-# cp .env.example .env       # Linux/Mac
-
-# Edite o .env com seus dados do MySQL
-```
-
-### 4. Crie o banco de dados
-
-Abra o MySQL Workbench (ou outro cliente) e execute o arquivo `schema.sql`.
-
-Isso cria o banco, as tabelas e um usuário administrador padrão:
-- **Telefone:** 51999999999
-- **Senha:** admin123
-
-### 5. Execute a aplicação
+Executar:
 
 ```bash
 python app.py
 ```
 
-Acesse: [http://localhost:5000](http://localhost:5000)
+Após a execução, acessar:
 
----
-
-## Estrutura do projeto
-
+```text
+http://127.0.0.1:5000
 ```
+
+## Funcionalidades
+
+### Cliente
+
+* Cadastro de usuário
+* Login no sistema
+* Visualização dos horários disponíveis
+* Agendamento de horários
+* Cancelamento de agendamentos
+
+### Administrador
+
+* Login administrativo
+* Cadastro de horários disponíveis
+* Exclusão de horários disponíveis
+* Visualização de todos os agendamentos
+* Cancelamento de agendamentos
+
+## Estrutura do Projeto
+
+```text
 barber_charque/
-├── app.py                  # Aplicação Flask (rotas e lógica)
-├── schema.sql              # Script de criação do banco
-├── requirements.txt        # Dependências Python
-├── Procfile                # Configuração para deploy no Render
-├── .env.example            # Exemplo de variáveis de ambiente
-├── templates/
-│   ├── base.html           # Layout base (navbar, footer, alerts)
-│   ├── index.html          # Página inicial
-│   ├── login.html          # Login
-│   ├── cadastro.html       # Cadastro de cliente
-│   ├── dashboard.html      # Agendamentos do cliente
-│   ├── agendar.html        # Tela de agendamento
-│   ├── admin_dashboard.html# Painel do administrador
-│   └── admin_horarios.html # Gerenciar horários disponíveis
-└── static/
-    └── css/
-        └── style.css       # Estilo da aplicação
+│
+├── app.py
+├── schema.sql
+├── requirements.txt
+├── .env.example
+├── static/
+│   └── css/
+│       └── style.css
+└── templates/
+    ├── base.html
+    ├── index.html
+    ├── login.html
+    ├── cadastro.html
+    ├── dashboard.html
+    ├── agendar.html
+    ├── admin_dashboard.html
+    └── admin_horarios.html
 ```
 
-## Deploy no Render
+## Desenvolvedor
 
-1. Suba o projeto no GitHub.
-2. No Render, crie um **Web Service** apontando para o repositório.
-3. Configure as variáveis de ambiente (DB_HOST, DB_USER, DB_PASSWORD, DB_NAME, SECRET_KEY).
-4. Use um banco MySQL externo (ex: PlanetScale, Railway ou Render MySQL).
-5. O `Procfile` já configura o Gunicorn automaticamente.
+Matheus Bauer Staehler Nunes
 
-> **Atenção:** adicione `gunicorn` ao `requirements.txt` para o Render.
+Curso de Análise e Desenvolvimento de Sistemas – ULBRA
