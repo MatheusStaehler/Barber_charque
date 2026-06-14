@@ -15,9 +15,11 @@ app.secret_key = os.getenv('SECRET_KEY', 'barber_charque_secret_2024')
 def get_db():
     return mysql.connector.connect(
         host=os.getenv('DB_HOST', 'localhost'),
+        port=int(os.getenv('DB_PORT', '3306')),
         user=os.getenv('DB_USER', 'root'),
         password=os.getenv('DB_PASSWORD', ''),
-        database=os.getenv('DB_NAME', 'barber_charque')
+        database=os.getenv('DB_NAME', 'barber_charque'),
+        ssl_disabled=os.getenv('DB_SSL_DISABLED', 'False') == 'True'
     )
 
 # ── Decorators de autenticação ────────────────────────────────────────────────
@@ -62,6 +64,7 @@ def cadastro():
             flash('Preencha todos os campos.', 'danger')
             return render_template('cadastro.html')
 
+        conn = cur = None
         try:
             conn = get_db()
             cur = conn.cursor(dictionary=True)
@@ -80,7 +83,8 @@ def cadastro():
         except Error as e:
             flash(f'Erro ao cadastrar: {e}', 'danger')
         finally:
-            cur.close(); conn.close()
+            if cur: cur.close()
+            if conn: conn.close()
 
     return render_template('cadastro.html')
 
@@ -93,6 +97,7 @@ def login():
         telefone = request.form['telefone'].strip()
         senha    = request.form['senha']
 
+        conn = cur = None
         try:
             conn = get_db()
             cur = conn.cursor(dictionary=True)
@@ -111,7 +116,8 @@ def login():
         except Error as e:
             flash(f'Erro ao fazer login: {e}', 'danger')
         finally:
-            cur.close(); conn.close()
+            if cur: cur.close()
+            if conn: conn.close()
 
     return render_template('login.html')
 
@@ -129,6 +135,7 @@ def dashboard():
     if session['tipo'] == 'admin':
         return redirect(url_for('admin_dashboard'))
 
+    conn = cur = None
     try:
         conn = get_db()
         cur = conn.cursor(dictionary=True)
@@ -144,7 +151,8 @@ def dashboard():
         flash(f'Erro ao carregar agendamentos: {e}', 'danger')
         agendamentos = []
     finally:
-        cur.close(); conn.close()
+        if cur: cur.close()
+        if conn: conn.close()
 
     return render_template('dashboard.html', agendamentos=agendamentos)
 
@@ -162,6 +170,7 @@ def agendar():
             flash('Selecione um horário.', 'danger')
             return redirect(url_for('agendar'))
 
+        conn = cur = None
         try:
             conn = get_db()
             cur = conn.cursor(dictionary=True)
@@ -184,9 +193,11 @@ def agendar():
         except Error as e:
             flash(f'Erro ao agendar: {e}', 'danger')
         finally:
-            cur.close(); conn.close()
+            if cur: cur.close()
+            if conn: conn.close()
 
     # GET – lista horários disponíveis
+    conn = cur = None
     try:
         conn = get_db()
         cur = conn.cursor(dictionary=True)
@@ -198,13 +209,15 @@ def agendar():
         flash(f'Erro ao carregar horários: {e}', 'danger')
         slots = []
     finally:
-        cur.close(); conn.close()
+        if cur: cur.close()
+        if conn: conn.close()
 
     return render_template('agendar.html', slots=slots)
 
 @app.route('/cancelar/<int:ag_id>', methods=['POST'])
 @login_required
 def cancelar(ag_id):
+    conn = cur = None
     try:
         conn = get_db()
         cur = conn.cursor(dictionary=True)
@@ -228,7 +241,8 @@ def cancelar(ag_id):
     except Error as e:
         flash(f'Erro ao cancelar: {e}', 'danger')
     finally:
-        cur.close(); conn.close()
+        if cur: cur.close()
+        if conn: conn.close()
 
     return redirect(url_for('dashboard'))
 
@@ -237,6 +251,7 @@ def cancelar(ag_id):
 @app.route('/admin')
 @admin_required
 def admin_dashboard():
+    conn = cur = None
     try:
         conn = get_db()
         cur = conn.cursor(dictionary=True)
@@ -251,7 +266,8 @@ def admin_dashboard():
         flash(f'Erro: {e}', 'danger')
         agendamentos = []
     finally:
-        cur.close(); conn.close()
+        if cur: cur.close()
+        if conn: conn.close()
 
     return render_template('admin_dashboard.html', agendamentos=agendamentos)
 
@@ -266,6 +282,7 @@ def admin_horarios():
             flash('Preencha data e horário.', 'danger')
             return redirect(url_for('admin_horarios'))
 
+        conn = cur = None
         try:
             conn = get_db()
             cur = conn.cursor()
@@ -278,11 +295,13 @@ def admin_horarios():
         except Error as e:
             flash(f'Erro ao cadastrar horário: {e}', 'danger')
         finally:
-            cur.close(); conn.close()
+            if cur: cur.close()
+            if conn: conn.close()
 
         return redirect(url_for('admin_horarios'))
 
     # GET
+    conn = cur = None
     try:
         conn = get_db()
         cur = conn.cursor(dictionary=True)
@@ -294,13 +313,15 @@ def admin_horarios():
         flash(f'Erro: {e}', 'danger')
         slots = []
     finally:
-        cur.close(); conn.close()
+        if cur: cur.close()
+        if conn: conn.close()
 
     return render_template('admin_horarios.html', slots=slots)
 
 @app.route('/admin/horarios/excluir/<int:slot_id>', methods=['POST'])
 @admin_required
 def admin_excluir_horario(slot_id):
+    conn = cur = None
     try:
         conn = get_db()
         cur = conn.cursor()
@@ -310,13 +331,15 @@ def admin_excluir_horario(slot_id):
     except Error as e:
         flash(f'Erro: {e}', 'danger')
     finally:
-        cur.close(); conn.close()
+        if cur: cur.close()
+        if conn: conn.close()
 
     return redirect(url_for('admin_horarios'))
 
 @app.route('/admin/cancelar/<int:ag_id>', methods=['POST'])
 @admin_required
 def admin_cancelar(ag_id):
+    conn = cur = None
     try:
         conn = get_db()
         cur = conn.cursor(dictionary=True)
@@ -333,7 +356,8 @@ def admin_cancelar(ag_id):
     except Error as e:
         flash(f'Erro: {e}', 'danger')
     finally:
-        cur.close(); conn.close()
+        if cur: cur.close()
+        if conn: conn.close()
 
     return redirect(url_for('admin_dashboard'))
 
